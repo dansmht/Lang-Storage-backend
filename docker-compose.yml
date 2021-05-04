@@ -4,9 +4,9 @@ services:
 
   server:
     container_name: server
+    image: node:14-alpine
     restart: always
-    build:
-      context: .
+    working_dir: /app
     env_file:
       - .env
     volumes:
@@ -14,7 +14,7 @@ services:
       - /app/node_modules
     ports:
       - 3000:3000
-    command: npm run start:dev
+    command: sh -c "npm install && npm run start:dev"
     depends_on:
       - postgres
       - redis
@@ -46,6 +46,8 @@ services:
     restart: always
     ports:
       - 8080:8080
+    depends_on:
+      - postgres
 
 volumes:
   pgdata:
