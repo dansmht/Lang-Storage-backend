@@ -1,6 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { PassportModule } from '@nestjs/passport';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './models/users/users.module';
 
 @Module({
   imports: [
@@ -16,11 +19,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
           username: configService.get('POSTGRES_USER'),
           password: configService.get('POSTGRES_PASSWORD'),
           database: configService.get('POSTGRES_DB'),
-          entities: [],
+          entities: [__dirname + '/**/*.entity{.ts,.js}'],
           synchronize: configService.get('NODE_ENV') === 'development',
         } as Partial<TypeOrmModuleOptions>),
       inject: [ConfigService],
     }),
+    PassportModule.register({ session: true }),
+    AuthModule,
+    UsersModule,
   ],
   providers: [],
 })

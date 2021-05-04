@@ -24,10 +24,11 @@ async function bootstrap() {
 
   redisClient.on('connect', () => Logger.log('Connected to Redis', 'Redis'));
 
+  const ONE_MONTH = 1000 * 60 * 60 * 24 * 30;
   app.use(
     session({
       cookie: {
-        maxAge: 1000,
+        maxAge: ONE_MONTH,
       },
       secret: configService.get('SESSION_SECRET'),
       resave: false,
