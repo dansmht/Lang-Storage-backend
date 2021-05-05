@@ -4,6 +4,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './models/users/users.module';
+import { TopicsModule } from './models/topics/topics.module';
+import { TopicItemsModule } from './models/topic-items/topic-items.module';
+import { LocalesModule } from './models/locales/locales.module';
+import { ExamplesModule } from './models/examples/examples.module';
 
 @Module({
   imports: [
@@ -27,6 +31,10 @@ import { UsersModule } from './models/users/users.module';
     PassportModule.register({ session: true }),
     AuthModule,
     UsersModule,
+    TopicsModule,
+    TopicItemsModule,
+    LocalesModule,
+    ExamplesModule,
   ],
   providers: [],
 })

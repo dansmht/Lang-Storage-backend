@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+
+import { Topic } from '../../topics/entities/topic.entity';
 
 @Entity()
 export class User {
@@ -22,4 +24,7 @@ export class User {
 
   @Column({ nullable: true })
   picture?: string;
+
+  @OneToMany(() => Topic, (topic) => topic.items)
+  topics: Topic[];
 }
