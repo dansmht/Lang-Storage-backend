@@ -5,6 +5,6 @@ export class Locale {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ length: 5 })
   name: string;
 }
