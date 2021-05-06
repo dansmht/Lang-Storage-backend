@@ -2,8 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { CreateExampleDto } from './dto/create-example.dto';
-import { UpdateExampleDto } from './dto/update-example.dto';
+import { ExampleDto } from './dto/example.dto';
 import { Example } from './entities/example.entity';
 
 @Injectable()
@@ -13,11 +12,11 @@ export class ExamplesService {
     private examplesRepository: Repository<Example>,
   ) {}
 
-  create(createExampleDto: CreateExampleDto) {
+  create(exampleDto: ExampleDto) {
     return 'This action adds a new example';
   }
 
-  createMany(examples: CreateExampleDto[]) {
+  createMany(examples: ExampleDto[]) {
     return this.examplesRepository.create(examples);
   }
 
@@ -29,7 +28,7 @@ export class ExamplesService {
     return `This action returns a #${id} example`;
   }
 
-  update(id: number, updateExampleDto: UpdateExampleDto) {
+  update(id: number, exampleDto: ExampleDto) {
     return `This action updates a #${id} example`;
   }
 

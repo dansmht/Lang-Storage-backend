@@ -6,9 +6,9 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
-import { CreateExampleDto } from '../../examples/dto/create-example.dto';
+import { ExampleDto } from '../../examples/dto/example.dto';
 
-export class CreateTopicItemDto {
+export class TopicItemDto {
   @IsString()
   @MinLength(2)
   @MaxLength(5)
@@ -28,6 +28,6 @@ export class CreateTopicItemDto {
   readonly targetText: string;
 
   @ValidateNested({ each: true })
-  @Type(() => CreateExampleDto)
-  examples: CreateExampleDto[];
+  @Type(() => ExampleDto)
+  examples: ExampleDto[];
 }

@@ -1,6 +1,6 @@
 import { IsOptional, IsString } from 'class-validator';
 
-export class CreateExampleDto {
+export class ExampleDto {
   @IsOptional()
   @IsString()
   readonly text: string;

@@ -9,16 +9,15 @@ import {
 } from '@nestjs/common';
 
 import { LocalesService } from './locales.service';
-import { CreateLocaleDto } from './dto/create-locale.dto';
-import { UpdateLocaleDto } from './dto/update-locale.dto';
+import { LocaleDto } from './dto/locale.dto';
 
 @Controller('locales')
 export class LocalesController {
   constructor(private readonly localesService: LocalesService) {}
 
   @Post()
-  create(@Body() createLocaleDto: CreateLocaleDto) {
-    return this.localesService.create(createLocaleDto);
+  create(@Body() localeDto: LocaleDto) {
+    return this.localesService.create(localeDto);
   }
 
   @Get()
@@ -32,8 +31,8 @@ export class LocalesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateLocaleDto: UpdateLocaleDto) {
-    return this.localesService.update(+id, updateLocaleDto);
+  update(@Param('id') id: string, @Body() localeDto: LocaleDto) {
+    return this.localesService.update(+id, localeDto);
   }
 
   @Delete(':id')

@@ -2,11 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { CreateTopicDto } from './dto/create-topic.dto';
-import { UpdateTopicDto } from './dto/update-topic.dto';
-import { Topic } from './entities/topic.entity';
 import { UsersService } from '../users/users.service';
 import { TopicItemsService } from '../topic-items/topic-items.service';
+import { TopicDto } from './dto/topic.dto';
+import { Topic } from './entities/topic.entity';
 
 @Injectable()
 export class TopicsService {
@@ -16,8 +15,8 @@ export class TopicsService {
     private topicItemsService: TopicItemsService,
   ) {}
 
-  async create(createTopicDto: CreateTopicDto) {
-    const { userGoogleId, name, topicItems } = createTopicDto;
+  async create(topicDto: TopicDto) {
+    const { userGoogleId, name, topicItems } = topicDto;
 
     const topic = this.topicsRepository.create({ name });
 
@@ -35,7 +34,7 @@ export class TopicsService {
     return `This action returns a #${id} topic`;
   }
 
-  update(id: number, updateTopicDto: UpdateTopicDto) {
+  update(id: number, topicDto: TopicDto) {
     return `This action updates a #${id} topic`;
   }
 

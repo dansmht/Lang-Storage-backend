@@ -1,9 +1,9 @@
 import { IsString, MinLength, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
-import { CreateTopicItemDto } from '../../topic-items/dto/create-topic-item.dto';
+import { TopicItemDto } from '../../topic-items/dto/topic-item.dto';
 
-export class CreateTopicDto {
+export class TopicDto {
   @IsString()
   @MinLength(1)
   readonly name: string;
@@ -12,6 +12,6 @@ export class CreateTopicDto {
   readonly userGoogleId: string;
 
   @ValidateNested({ each: true })
-  @Type(() => CreateTopicItemDto)
-  topicItems: CreateTopicItemDto[];
+  @Type(() => TopicItemDto)
+  topicItems: TopicItemDto[];
 }

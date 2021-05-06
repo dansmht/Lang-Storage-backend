@@ -9,15 +9,14 @@ import {
 } from '@nestjs/common';
 
 import { TopicItemsService } from './topic-items.service';
-import { CreateTopicItemDto } from './dto/create-topic-item.dto';
-import { UpdateTopicItemDto } from './dto/update-topic-item.dto';
+import { TopicItemDto } from './dto/topic-item.dto';
 
 @Controller('topic-items')
 export class TopicItemsController {
   constructor(private readonly topicItemsService: TopicItemsService) {}
 
   @Post()
-  create(@Body() createTopicItemDto: CreateTopicItemDto) {
+  create(@Body() createTopicItemDto: TopicItemDto) {
     return this.topicItemsService.create(createTopicItemDto);
   }
 
@@ -32,11 +31,8 @@ export class TopicItemsController {
   }
 
   @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateTopicItemDto: UpdateTopicItemDto,
-  ) {
-    return this.topicItemsService.update(+id, updateTopicItemDto);
+  update(@Param('id') id: string, @Body() topicItemDto: TopicItemDto) {
+    return this.topicItemsService.update(+id, topicItemDto);
   }
 
   @Delete(':id')

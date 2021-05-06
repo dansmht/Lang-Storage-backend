@@ -3,8 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Locale } from './entities/locale.entity';
-import { CreateLocaleDto } from './dto/create-locale.dto';
-import { UpdateLocaleDto } from './dto/update-locale.dto';
+import { LocaleDto } from './dto/locale.dto';
 
 @Injectable()
 export class LocalesService {
@@ -12,8 +11,8 @@ export class LocalesService {
     @InjectRepository(Locale) private localesRepository: Repository<Locale>,
   ) {}
 
-  create(createLocaleDto: CreateLocaleDto) {
-    const locale = this.localesRepository.create(createLocaleDto);
+  create(localeDto: LocaleDto) {
+    const locale = this.localesRepository.create(localeDto);
     return this.localesRepository.save(locale);
   }
 
@@ -29,9 +28,9 @@ export class LocalesService {
     return this.localesRepository.findOne({ name });
   }
 
-  async update(id: number, updateLocaleDto: UpdateLocaleDto) {
+  async update(id: number, localeDto: LocaleDto) {
     const locale = await this.localesRepository.findOne(id);
-    locale.name = updateLocaleDto.name;
+    locale.name = localeDto.name;
     return await this.localesRepository.save(locale);
   }
 

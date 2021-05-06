@@ -2,8 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { CreateTopicItemDto } from './dto/create-topic-item.dto';
-import { UpdateTopicItemDto } from './dto/update-topic-item.dto';
+import { TopicItemDto } from './dto/topic-item.dto';
 import { TopicItem } from './entities/topic-item.entity';
 import { LocalesService } from '../locales/locales.service';
 import { ExamplesService } from '../examples/examples.service';
@@ -17,11 +16,11 @@ export class TopicItemsService {
     private examplesService: ExamplesService,
   ) {}
 
-  create(createTopicItemDto: CreateTopicItemDto) {
+  create(topicItemDto: TopicItemDto) {
     return 'This action adds a new topicItem';
   }
 
-  async createMany(topicItems: CreateTopicItemDto[]) {
+  async createMany(topicItems: TopicItemDto[]) {
     const mappedTopicItems = await Promise.all(
       topicItems.map(async (item) => {
         const nativeLocale = await this.localesService.findOneByName(
@@ -54,7 +53,7 @@ export class TopicItemsService {
     return `This action returns a #${id} topicItem`;
   }
 
-  update(id: number, updateTopicItemDto: UpdateTopicItemDto) {
+  update(id: number, topicItemDto: TopicItemDto) {
     return `This action updates a #${id} topicItem`;
   }
 
