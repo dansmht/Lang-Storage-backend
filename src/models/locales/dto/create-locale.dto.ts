@@ -1,1 +1,6 @@
-export class CreateLocaleDto {}
+import { IsString } from 'class-validator';
+
+export class CreateLocaleDto {
+  @IsString()
+  readonly name: string;
+}
