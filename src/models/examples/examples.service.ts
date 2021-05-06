@@ -12,20 +12,20 @@ export class ExamplesService {
     private examplesRepository: Repository<Example>,
   ) {}
 
-  create(exampleDto: ExampleDto) {
-    return 'This action adds a new example';
-  }
-
-  createMany(examples: ExampleDto[]) {
-    return this.examplesRepository.create(examples);
-  }
-
   findAll() {
     return `This action returns all examples`;
   }
 
   findOne(id: number) {
     return `This action returns a #${id} example`;
+  }
+
+  create(exampleDto: ExampleDto) {
+    return 'This action adds a new example';
+  }
+
+  createMany(examples: ExampleDto[]) {
+    return this.examplesRepository.create(examples);
   }
 
   update(id: number, exampleDto: ExampleDto) {

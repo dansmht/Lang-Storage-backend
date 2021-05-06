@@ -10,6 +10,8 @@ export class Example {
   @Column({ length: 300 })
   text: string;
 
-  @ManyToOne(() => TopicItem, (topicItem) => topicItem.examples)
+  @ManyToOne(() => TopicItem, (topicItem) => topicItem.examples, {
+    onDelete: 'CASCADE',
+  })
   topicItem: TopicItem;
 }

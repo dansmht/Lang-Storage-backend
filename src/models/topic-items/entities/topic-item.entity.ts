@@ -31,7 +31,10 @@ export class TopicItem {
   @Column({ length: 40 })
   targetText: string;
 
-  @ManyToOne(() => Topic, (topic) => topic.items)
+  @ManyToOne(() => Topic, (topic) => topic.items, {
+    orphanedRowAction: 'delete',
+    onDelete: 'CASCADE',
+  })
   topic: Topic;
 
   @OneToMany(() => Example, (example) => example.topicItem, {

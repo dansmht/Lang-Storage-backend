@@ -16,6 +16,14 @@ export class TopicItemsService {
     private examplesService: ExamplesService,
   ) {}
 
+  findAll() {
+    return `This action returns all topicItems`;
+  }
+
+  findOne(id: number) {
+    return `This action returns a #${id} topicItem`;
+  }
+
   create(topicItemDto: TopicItemDto) {
     return 'This action adds a new topicItem';
   }
@@ -43,18 +51,6 @@ export class TopicItemsService {
     );
 
     return this.topicItemsRepository.create(mappedTopicItems);
-  }
-
-  findAll() {
-    return `This action returns all topicItems`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} topicItem`;
-  }
-
-  update(id: number, topicItemDto: TopicItemDto) {
-    return `This action updates a #${id} topicItem`;
   }
 
   remove(id: number) {

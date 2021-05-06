@@ -15,6 +15,14 @@ export class TopicsService {
     private topicItemsService: TopicItemsService,
   ) {}
 
+  findAll() {
+    return this.topicsRepository.find();
+  }
+
+  findOne(id: number) {
+    return this.topicsRepository.findOne(id);
+  }
+
   async create(topicDto: TopicDto) {
     const { userGoogleId, name, topicItems } = topicDto;
 
@@ -26,19 +34,20 @@ export class TopicsService {
     return this.topicsRepository.save(topic);
   }
 
-  findAll() {
-    return this.topicsRepository.find();
+  async update(id: number, topicDto: TopicDto) {
+    const { name, topicItems } = topicDto;
+
+    const topic = await this.topicsRepository.findOne(id);
+
+    topic.name = name;
+    topic.items = await this.topicItemsService.createMany(topicItems);
+
+    return this.topicsRepository.save(topic);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} topic`;
-  }
+  async remove(id: number) {
+    const topic = await this.topicsRepository.findOne(id);
 
-  update(id: number, topicDto: TopicDto) {
-    return `This action updates a #${id} topic`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} topic`;
+    return this.topicsRepository.remove(topic);
   }
 }

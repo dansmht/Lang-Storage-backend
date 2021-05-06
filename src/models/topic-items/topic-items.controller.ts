@@ -32,7 +32,7 @@ export class TopicItemsController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() topicItemDto: TopicItemDto) {
-    return this.topicItemsService.update(+id, topicItemDto);
+    // return this.topicItemsService.update(+id, topicItemDto);
   }
 
   @Delete(':id')
