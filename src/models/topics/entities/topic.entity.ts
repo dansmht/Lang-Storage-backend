@@ -17,9 +17,14 @@ export class Topic {
   @Column()
   name: string;
 
-  @ManyToOne(() => User, (user) => user.topics)
+  @ManyToOne(() => User, (user) => user.topics, {
+    cascade: true,
+  })
   user: User;
 
-  @OneToMany(() => TopicItem, (topicItem) => topicItem.topic)
+  @OneToMany(() => TopicItem, (topicItem) => topicItem.topic, {
+    cascade: true,
+    eager: true,
+  })
   items: TopicItem[];
 }

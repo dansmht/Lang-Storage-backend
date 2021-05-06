@@ -25,6 +25,10 @@ export class LocalesService {
     return this.localesRepository.findOne(id);
   }
 
+  findOneByName(name: string) {
+    return this.localesRepository.findOne({ name });
+  }
+
   async update(id: number, updateLocaleDto: UpdateLocaleDto) {
     const locale = await this.localesRepository.findOne(id);
     locale.name = updateLocaleDto.name;

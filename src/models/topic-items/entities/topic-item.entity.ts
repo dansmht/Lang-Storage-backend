@@ -17,14 +17,18 @@ export class TopicItem {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => Locale)
+  @OneToOne(() => Locale, {
+    eager: true,
+  })
   @JoinColumn()
   nativeLocale: Locale;
 
   @Column({ length: 40 })
   nativeText: string;
 
-  @OneToOne(() => Locale)
+  @OneToOne(() => Locale, {
+    eager: true,
+  })
   @JoinColumn()
   targetLocale: Locale;
 
@@ -34,6 +38,9 @@ export class TopicItem {
   @ManyToOne(() => Topic, (topic) => topic.items)
   topic: Topic;
 
-  @OneToMany(() => Example, (example) => example.topicItem)
+  @OneToMany(() => Example, (example) => example.topicItem, {
+    cascade: true,
+    eager: true,
+  })
   examples: Example[];
 }
