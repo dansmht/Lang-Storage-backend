@@ -9,5 +9,6 @@ import { Locale } from './entities/locale.entity';
   imports: [TypeOrmModule.forFeature([Locale])],
   controllers: [LocalesController],
   providers: [LocalesService],
+  exports: [LocalesService],
 })
 export class LocalesModule {}

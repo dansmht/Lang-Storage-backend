@@ -1,10 +1,8 @@
 import {
   Column,
   Entity,
-  JoinColumn,
   ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -17,19 +15,17 @@ export class TopicItem {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => Locale, {
+  @ManyToOne(() => Locale, (locale) => locale.nativeLocale, {
     eager: true,
   })
-  @JoinColumn()
   nativeLocale: Locale;
 
   @Column({ length: 40 })
   nativeText: string;
 
-  @OneToOne(() => Locale, {
+  @ManyToOne(() => Locale, (locale) => locale.targetLocale, {
     eager: true,
   })
-  @JoinColumn()
   targetLocale: Locale;
 
   @Column({ length: 40 })

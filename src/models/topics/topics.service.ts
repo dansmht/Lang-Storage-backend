@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { CreateTopicDto } from './dto/create-topic.dto';
-import { UpdateTopicDto } from './dto/update-topic.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+import { CreateTopicDto } from './dto/create-topic.dto';
+import { UpdateTopicDto } from './dto/update-topic.dto';
 import { Topic } from './entities/topic.entity';
 import { UsersService } from '../users/users.service';
 import { TopicItemsService } from '../topic-items/topic-items.service';
@@ -18,20 +18,17 @@ export class TopicsService {
 
   async create(createTopicDto: CreateTopicDto) {
     const { userGoogleId, name, topicItems } = createTopicDto;
+
     const topic = this.topicsRepository.create({ name });
 
-    const user = await this.usersService.findByGoogleId(userGoogleId);
+    topic.user = await this.usersService.findByGoogleId(userGoogleId);
+    topic.items = await this.topicItemsService.createMany(topicItems);
 
-    topic.user = user;
-
-    // TODO
-    // topic.items = topicItems;
-
-    return 'This action adds a new topic';
+    return this.topicsRepository.save(topic);
   }
 
   findAll() {
-    return `This action returns all topics`;
+    return this.topicsRepository.find();
   }
 
   findOne(id: number) {

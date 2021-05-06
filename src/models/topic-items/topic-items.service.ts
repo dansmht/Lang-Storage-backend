@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 import { CreateTopicItemDto } from './dto/create-topic-item.dto';
 import { UpdateTopicItemDto } from './dto/update-topic-item.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-
-import { Repository } from 'typeorm';
 import { TopicItem } from './entities/topic-item.entity';
 import { LocalesService } from '../locales/locales.service';
+import { ExamplesService } from '../examples/examples.service';
 
 @Injectable()
 export class TopicItemsService {
@@ -14,33 +14,36 @@ export class TopicItemsService {
     @InjectRepository(TopicItem)
     private topicItemsRepository: Repository<TopicItem>,
     private localesService: LocalesService,
+    private examplesService: ExamplesService,
   ) {}
 
   create(createTopicItemDto: CreateTopicItemDto) {
     return 'This action adds a new topicItem';
   }
 
-  createMany(topicItems: CreateTopicItemDto[]) {
-    const mappedTopicItems = topicItems.map(async (item) => {
-      const nativeLocale = await this.localesService.findOneByName(
-        item.nativeLocale,
-      );
-      const targetLocale = await this.localesService.findOneByName(
-        item.targetLocale,
-      );
+  async createMany(topicItems: CreateTopicItemDto[]) {
+    const mappedTopicItems = await Promise.all(
+      topicItems.map(async (item) => {
+        const nativeLocale = await this.localesService.findOneByName(
+          item.nativeLocale,
+        );
+        const targetLocale = await this.localesService.findOneByName(
+          item.targetLocale,
+        );
 
-      // TODO examples
+        const examples = this.examplesService.createMany(item.examples);
 
-      return {
-        ...item,
-        nativeLocale,
-        targetLocale,
-      };
-    });
+        return {
+          nativeLocale,
+          nativeText: item.nativeText,
+          targetLocale,
+          targetText: item.targetText,
+          examples,
+        };
+      }),
+    );
 
-    // const topicItemsToSave = this.topicItemsRepository.create(mappedTopicItems);
-    // this.topicItemsRepository.save(topicItems);
-    return 'This action adds a new topicItem';
+    return this.topicItemsRepository.create(mappedTopicItems);
   }
 
   findAll() {

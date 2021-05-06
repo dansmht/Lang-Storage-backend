@@ -12,6 +12,5 @@ import { UsersModule } from '../models/users/users.module';
   imports: [TypeOrmModule.forFeature([User]), UsersModule],
   controllers: [AuthController],
   providers: [GoogleStrategy, SessionSerializer, AuthService],
-  exports: [AuthService],
 })
 export class AuthModule {}
