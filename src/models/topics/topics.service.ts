@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 
 import { UsersService } from '../users/users.service';
 import { TopicItemsService } from '../topic-items/topic-items.service';
@@ -15,8 +15,17 @@ export class TopicsService {
     private topicItemsService: TopicItemsService,
   ) {}
 
-  findAll() {
-    return this.topicsRepository.find();
+  async findAll(userGoogleId: string) {
+    const user = await this.usersService.findByGoogleId(userGoogleId);
+    const topics = await this.topicsRepository.find({
+      relations: ['user'],
+      where: [
+        { user: { id: user.id } },
+        { user: { id: Not(user.id) }, isPrivate: false },
+      ],
+    });
+
+    return topics;
   }
 
   findOne(id: number) {
@@ -24,11 +33,12 @@ export class TopicsService {
   }
 
   async create(topicDto: TopicDto) {
-    const { userGoogleId, name, topicItems } = topicDto;
+    const { name, isPrivate, googleId, topicItems } = topicDto;
 
-    const topic = this.topicsRepository.create({ name });
+    const topic = this.topicsRepository.create({ name, isPrivate });
 
-    topic.user = await this.usersService.findByGoogleId(userGoogleId);
+    topic.user = await this.usersService.findByGoogleId(googleId);
+    console.log('topic user', topic.user);
     topic.items = await this.topicItemsService.createMany(topicItems);
 
     return this.topicsRepository.save(topic);

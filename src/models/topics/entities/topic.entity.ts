@@ -17,6 +17,9 @@ export class Topic {
   @Column()
   name: string;
 
+  @Column()
+  isPrivate: boolean;
+
   @ManyToOne(() => User, (user) => user.topics, {
     cascade: true,
   })

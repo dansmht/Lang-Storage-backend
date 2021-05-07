@@ -41,6 +41,7 @@ export class TopicItemsService {
         const examples = this.examplesService.createMany(item.examples);
 
         return {
+          position: item.position,
           nativeLocale,
           nativeText: item.nativeText,
           targetLocale,

@@ -6,12 +6,16 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 
+import { AuthenticatedGuard } from '../../auth/guards';
+import { UserGoogleId } from '../../utils/decorators/user-google-id.decorator';
 import { TopicsService } from './topics.service';
 import { TopicDto } from './dto/topic.dto';
 
 @Controller('topics')
+// @UseGuards(AuthenticatedGuard)
 export class TopicsController {
   constructor(private readonly topicsService: TopicsService) {}
 
@@ -21,8 +25,8 @@ export class TopicsController {
   }
 
   @Get()
-  findAll() {
-    return this.topicsService.findAll();
+  findAll(@UserGoogleId() userGoogleId: string) {
+    return this.topicsService.findAll(userGoogleId);
   }
 
   @Get(':id')

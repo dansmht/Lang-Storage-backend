@@ -15,6 +15,9 @@ export class TopicItem {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column()
+  position: number;
+
   @ManyToOne(() => Locale, (locale) => locale.nativeLocale, {
     eager: true,
   })

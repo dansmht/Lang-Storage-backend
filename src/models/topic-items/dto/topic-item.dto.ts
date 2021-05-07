@@ -1,4 +1,5 @@
 import {
+  IsNumber,
   IsString,
   MaxLength,
   MinLength,
@@ -9,6 +10,9 @@ import { Type } from 'class-transformer';
 import { ExampleDto } from '../../examples/dto/example.dto';
 
 export class TopicItemDto {
+  @IsNumber()
+  readonly position: number;
+
   @IsString()
   @MinLength(2)
   @MaxLength(5)
