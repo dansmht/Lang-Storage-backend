@@ -11,6 +11,10 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors({
+    origin: [/http:\/\/localhost:\d+/],
+  });
+
   const configService = app.get(ConfigService);
 
   app.setGlobalPrefix('api');
