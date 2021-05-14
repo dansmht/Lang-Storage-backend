@@ -15,13 +15,13 @@ import { TopicsService } from './topics.service';
 import { TopicDto } from './dto/topic.dto';
 
 @Controller('topics')
-// @UseGuards(AuthenticatedGuard)
+@UseGuards(AuthenticatedGuard)
 export class TopicsController {
   constructor(private readonly topicsService: TopicsService) {}
 
   @Post()
-  create(@Body() createTopicDto: TopicDto) {
-    return this.topicsService.create(createTopicDto);
+  create(@UserGoogleId() userGoogleId: string, @Body() topicDto: TopicDto) {
+    return this.topicsService.create(userGoogleId, topicDto);
   }
 
   @Get()

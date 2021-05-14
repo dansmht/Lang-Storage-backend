@@ -24,7 +24,7 @@ export class TopicsService {
         { user: { id: Not(user.id) }, isPrivate: false },
       ],
     });
-
+    console.log('get all topics', topics);
     return topics;
   }
 
@@ -32,12 +32,12 @@ export class TopicsService {
     return this.topicsRepository.findOne(id);
   }
 
-  async create(topicDto: TopicDto) {
-    const { name, isPrivate, googleId, topicItems } = topicDto;
+  async create(userGoogleId: string, topicDto: TopicDto) {
+    const { name, isPrivate, topicItems } = topicDto;
 
     const topic = this.topicsRepository.create({ name, isPrivate });
 
-    topic.user = await this.usersService.findByGoogleId(googleId);
+    topic.user = await this.usersService.findByGoogleId(userGoogleId);
     console.log('topic user', topic.user);
     topic.items = await this.topicItemsService.createMany(topicItems);
 

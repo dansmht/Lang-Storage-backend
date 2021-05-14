@@ -16,8 +16,6 @@ export class TopicDto {
   @MinLength(1)
   readonly name: string;
 
-  readonly googleId?: string;
-
   @ValidateNested({ each: true })
   @Type(() => TopicItemDto)
   topicItems: TopicItemDto[];
