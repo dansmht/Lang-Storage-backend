@@ -15,16 +15,31 @@ export class TopicsService {
     private topicItemsService: TopicItemsService,
   ) {}
 
-  async findAll(userGoogleId: string) {
+  async findAll() {
+    const topics = await this.topicsRepository.find({
+      relations: ['user'],
+    });
+
+    return topics;
+  }
+
+  async findCurrentUserTopics(userGoogleId: string) {
     const user = await this.usersService.findByGoogleId(userGoogleId);
     const topics = await this.topicsRepository.find({
       relations: ['user'],
-      where: [
-        { user: { id: user.id } },
-        { user: { id: Not(user.id) }, isPrivate: false },
-      ],
+      where: [{ user: { id: user.id } }],
     });
-    console.log('get all topics', topics);
+
+    return topics;
+  }
+
+  async findExceptCurrentUserTopics(userGoogleId: string) {
+    const user = await this.usersService.findByGoogleId(userGoogleId);
+    const topics = await this.topicsRepository.find({
+      relations: ['user'],
+      where: [{ user: { id: Not(user.id) }, isPrivate: false }],
+    });
+
     return topics;
   }
 
@@ -38,7 +53,6 @@ export class TopicsService {
     const topic = this.topicsRepository.create({ name, isPrivate });
 
     topic.user = await this.usersService.findByGoogleId(userGoogleId);
-    console.log('topic user', topic.user);
     topic.items = await this.topicItemsService.createMany(topicItems);
 
     return this.topicsRepository.save(topic);

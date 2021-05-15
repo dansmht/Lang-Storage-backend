@@ -21,12 +21,23 @@ export class TopicsController {
 
   @Post()
   create(@UserGoogleId() userGoogleId: string, @Body() topicDto: TopicDto) {
+    console.log('controller userGoogleId topicDto', userGoogleId, topicDto);
     return this.topicsService.create(userGoogleId, topicDto);
   }
 
   @Get()
-  findAll(@UserGoogleId() userGoogleId: string) {
-    return this.topicsService.findAll(userGoogleId);
+  findAll() {
+    return this.topicsService.findAll();
+  }
+
+  @Get('mine')
+  findCurrentUserTopics(@UserGoogleId() userGoogleId: string) {
+    return this.topicsService.findCurrentUserTopics(userGoogleId);
+  }
+
+  @Get('other')
+  findExceptCurrentUserTopics(@UserGoogleId() userGoogleId: string) {
+    return this.topicsService.findExceptCurrentUserTopics(userGoogleId);
   }
 
   @Get(':id')
