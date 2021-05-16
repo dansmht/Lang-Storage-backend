@@ -13,6 +13,7 @@ import { AuthenticatedGuard } from '../../auth/guards';
 import { UserGoogleId } from '../../utils/decorators/user-google-id.decorator';
 import { TopicsService } from './topics.service';
 import { TopicDto } from './dto/topic.dto';
+import { UpdatePositionDto } from './dto/update-position.dto';
 
 @Controller('topics')
 @UseGuards(AuthenticatedGuard)
@@ -47,6 +48,14 @@ export class TopicsController {
   @Patch(':id')
   update(@Param('id') id: string, @Body() topicDto: TopicDto) {
     return this.topicsService.update(+id, topicDto);
+  }
+
+  @Patch('position/:id')
+  updatePosition(
+    @Param('id') id: string,
+    @Body() updatePositionDto: UpdatePositionDto,
+  ) {
+    return this.topicsService.updatePosition(+id, updatePositionDto);
   }
 
   @Delete(':id')

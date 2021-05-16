@@ -6,6 +6,7 @@ import { UsersService } from '../users/users.service';
 import { TopicItemsService } from '../topic-items/topic-items.service';
 import { TopicDto } from './dto/topic.dto';
 import { Topic } from './entities/topic.entity';
+import { UpdatePositionDto } from './dto/update-position.dto';
 
 @Injectable()
 export class TopicsService {
@@ -18,6 +19,9 @@ export class TopicsService {
   async findAll() {
     const topics = await this.topicsRepository.find({
       relations: ['user'],
+      order: {
+        updatedDate: 'DESC',
+      },
     });
 
     return topics;
@@ -28,6 +32,9 @@ export class TopicsService {
     const topics = await this.topicsRepository.find({
       relations: ['user'],
       where: [{ user: { id: user.id } }],
+      order: {
+        position: 'ASC',
+      },
     });
 
     return topics;
@@ -38,6 +45,9 @@ export class TopicsService {
     const topics = await this.topicsRepository.find({
       relations: ['user'],
       where: [{ user: { id: Not(user.id) }, isPrivate: false }],
+      order: {
+        updatedDate: 'DESC',
+      },
     });
 
     return topics;
@@ -69,6 +79,16 @@ export class TopicsService {
     topic.isPrivate = isPrivate;
     topic.position = position;
     topic.items = await this.topicItemsService.createMany(topicItems);
+
+    return this.topicsRepository.save(topic);
+  }
+
+  async updatePosition(id: number, updatePositionDto: UpdatePositionDto) {
+    const { position } = updatePositionDto;
+
+    const topic = await this.topicsRepository.findOne(id);
+
+    topic.position = position;
 
     return this.topicsRepository.save(topic);
   }
