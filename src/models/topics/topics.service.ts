@@ -48,10 +48,11 @@ export class TopicsService {
   }
 
   async create(userGoogleId: string, topicDto: TopicDto) {
-    const { name, isPrivate, topicItems } = topicDto;
+    const { name, isPrivate, topicItems, position } = topicDto;
 
-    const topic = this.topicsRepository.create({ name, isPrivate });
+    const topic = this.topicsRepository.create({ name, isPrivate, position });
 
+    topic.updatedDate = new Date();
     topic.user = await this.usersService.findByGoogleId(userGoogleId);
     topic.items = await this.topicItemsService.createMany(topicItems);
 
@@ -59,11 +60,14 @@ export class TopicsService {
   }
 
   async update(id: number, topicDto: TopicDto) {
-    const { name, topicItems } = topicDto;
+    const { name, isPrivate, topicItems, position } = topicDto;
 
     const topic = await this.topicsRepository.findOne(id);
 
+    topic.updatedDate = new Date();
     topic.name = name;
+    topic.isPrivate = isPrivate;
+    topic.position = position;
     topic.items = await this.topicItemsService.createMany(topicItems);
 
     return this.topicsRepository.save(topic);

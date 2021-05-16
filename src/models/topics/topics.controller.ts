@@ -21,7 +21,6 @@ export class TopicsController {
 
   @Post()
   create(@UserGoogleId() userGoogleId: string, @Body() topicDto: TopicDto) {
-    console.log('controller userGoogleId topicDto', userGoogleId, topicDto);
     return this.topicsService.create(userGoogleId, topicDto);
   }
 
@@ -30,7 +29,7 @@ export class TopicsController {
     return this.topicsService.findAll();
   }
 
-  @Get('mine')
+  @Get('my')
   findCurrentUserTopics(@UserGoogleId() userGoogleId: string) {
     return this.topicsService.findCurrentUserTopics(userGoogleId);
   }

@@ -1,5 +1,7 @@
 import {
+  IsArray,
   IsBoolean,
+  IsNumber,
   IsString,
   MinLength,
   ValidateNested,
@@ -16,6 +18,10 @@ export class TopicDto {
   @MinLength(1)
   readonly name: string;
 
+  @IsNumber()
+  readonly position: number;
+
+  @IsArray()
   @ValidateNested({ each: true })
   @Type(() => TopicItemDto)
   topicItems: TopicItemDto[];

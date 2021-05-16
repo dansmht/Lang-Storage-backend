@@ -17,8 +17,11 @@ export class Topic {
   @Column()
   name: string;
 
-  @Column()
+  @Column('boolean')
   isPrivate: boolean;
+
+  @Column('float')
+  position: number;
 
   @ManyToOne(() => User, (user) => user.topics, {
     cascade: true,
@@ -30,4 +33,7 @@ export class Topic {
     eager: true,
   })
   items: TopicItem[];
+
+  @Column({ type: 'timestamptz' })
+  updatedDate: Date;
 }
