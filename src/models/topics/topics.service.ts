@@ -106,7 +106,7 @@ export class TopicsService {
     return this.topicsRepository.remove(topic);
   }
 
-  async copyTopicToUser(id: number, userGoogleId: string) {
+  async copyTopicToUser(id: number, userGoogleId: string, position: number) {
     const topic = await this.topicsRepository.findOne(id);
     const user = await this.usersService.findByGoogleId(userGoogleId);
 
@@ -120,6 +120,9 @@ export class TopicsService {
     if (isCopiedAlready) {
       throw new BadRequestException('You already copied this topic');
     }
+
+    const copiedTopicDto = this.reformatterService.topicToDto(topic, position);
+    await this.create(user.googleId, copiedTopicDto);
 
     topic.copied.push(user);
 
