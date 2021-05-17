@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
+import { ReformatterModule } from './modules/reformatter/reformatter.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './models/users/users.module';
 import { TopicsModule } from './models/topics/topics.module';
@@ -29,6 +30,7 @@ import { ExamplesModule } from './models/examples/examples.module';
       inject: [ConfigService],
     }),
     PassportModule.register({ session: true }),
+    ReformatterModule,
     AuthModule,
     UsersModule,
     TopicsModule,

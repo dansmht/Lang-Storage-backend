@@ -4,9 +4,11 @@ import { Not, Repository } from 'typeorm';
 
 import { UsersService } from '../users/users.service';
 import { TopicItemsService } from '../topic-items/topic-items.service';
+import { ReformatterService } from '../../modules/reformatter/reformatter.service';
 import { TopicDto } from './dto/topic.dto';
 import { Topic } from './entities/topic.entity';
 import { UpdatePositionDto } from './dto/update-position.dto';
+import { TopicResponse } from '../../utils/response-types';
 
 @Injectable()
 export class TopicsService {
@@ -14,9 +16,10 @@ export class TopicsService {
     @InjectRepository(Topic) private topicsRepository: Repository<Topic>,
     private usersService: UsersService,
     private topicItemsService: TopicItemsService,
+    private reformatterService: ReformatterService,
   ) {}
 
-  async findAll() {
+  async findAll(): Promise<TopicResponse[]> {
     const topics = await this.topicsRepository.find({
       relations: ['user'],
       order: {
@@ -24,10 +27,10 @@ export class TopicsService {
       },
     });
 
-    return topics;
+    return this.reformatterService.topicsForResponse(topics);
   }
 
-  async findCurrentUserTopics(userGoogleId: string) {
+  async findCurrentUserTopics(userGoogleId: string): Promise<TopicResponse[]> {
     const user = await this.usersService.findByGoogleId(userGoogleId);
     const topics = await this.topicsRepository.find({
       relations: ['user'],
@@ -37,10 +40,12 @@ export class TopicsService {
       },
     });
 
-    return topics;
+    return this.reformatterService.topicsForResponse(topics);
   }
 
-  async findExceptCurrentUserTopics(userGoogleId: string) {
+  async findExceptCurrentUserTopics(
+    userGoogleId: string,
+  ): Promise<TopicResponse[]> {
     const user = await this.usersService.findByGoogleId(userGoogleId);
     const topics = await this.topicsRepository.find({
       relations: ['user'],
@@ -50,14 +55,17 @@ export class TopicsService {
       },
     });
 
-    return topics;
+    return this.reformatterService.topicsForResponse(topics);
   }
 
   findOne(id: number) {
     return this.topicsRepository.findOne(id);
   }
 
-  async create(userGoogleId: string, topicDto: TopicDto) {
+  async create(
+    userGoogleId: string,
+    topicDto: TopicDto,
+  ): Promise<TopicResponse> {
     const { name, isPrivate, topicItems, position } = topicDto;
 
     const topic = this.topicsRepository.create({ name, isPrivate, position });
@@ -66,7 +74,9 @@ export class TopicsService {
     topic.user = await this.usersService.findByGoogleId(userGoogleId);
     topic.items = await this.topicItemsService.createMany(topicItems);
 
-    return this.topicsRepository.save(topic);
+    await this.topicsRepository.save(topic);
+
+    return this.reformatterService.topicForResponse(topic);
   }
 
   async update(id: number, topicDto: TopicDto) {
