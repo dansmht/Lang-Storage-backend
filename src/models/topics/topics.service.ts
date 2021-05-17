@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Not, Repository } from 'typeorm';
 
@@ -21,7 +21,6 @@ export class TopicsService {
 
   async findAll(): Promise<TopicResponse[]> {
     const topics = await this.topicsRepository.find({
-      relations: ['user'],
       order: {
         updatedDate: 'DESC',
       },
@@ -33,7 +32,6 @@ export class TopicsService {
   async findCurrentUserTopics(userGoogleId: string): Promise<TopicResponse[]> {
     const user = await this.usersService.findByGoogleId(userGoogleId);
     const topics = await this.topicsRepository.find({
-      relations: ['user'],
       where: [{ user: { id: user.id } }],
       order: {
         position: 'ASC',
@@ -48,7 +46,6 @@ export class TopicsService {
   ): Promise<TopicResponse[]> {
     const user = await this.usersService.findByGoogleId(userGoogleId);
     const topics = await this.topicsRepository.find({
-      relations: ['user'],
       where: [{ user: { id: Not(user.id) }, isPrivate: false }],
       order: {
         updatedDate: 'DESC',
@@ -107,5 +104,36 @@ export class TopicsService {
     const topic = await this.topicsRepository.findOne(id);
 
     return this.topicsRepository.remove(topic);
+  }
+
+  async copyTopicToUser(id: number, userGoogleId: string) {
+    const topic = await this.topicsRepository.findOne(id);
+    const user = await this.usersService.findByGoogleId(userGoogleId);
+
+    if (topic.user.id === user.id) {
+      throw new BadRequestException('You cannot copy your own topic');
+    }
+
+    const isCopiedAlready = topic.copied.some((userWhoWantsCopy) => {
+      return userWhoWantsCopy.id === user.id;
+    });
+    if (isCopiedAlready) {
+      throw new BadRequestException('You already copied this topic');
+    }
+
+    topic.copied.push(user);
+
+    return this.topicsRepository.save(topic);
+  }
+
+  async removeTopicFromUser(id: number, userGoogleId: string) {
+    const topic = await this.topicsRepository.findOne(id);
+    const user = await this.usersService.findByGoogleId(userGoogleId);
+
+    topic.copied = topic.copied.filter((userWhoCopied) => {
+      return userWhoCopied.id !== user.id;
+    });
+
+    return this.topicsRepository.save(topic);
   }
 }

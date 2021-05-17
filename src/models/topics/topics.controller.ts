@@ -70,4 +70,20 @@ export class TopicsController {
   remove(@Param('id') id: string) {
     return this.topicsService.remove(+id);
   }
+
+  @Post('copy/:id')
+  copyTopicToUser(
+    @Param('id') id: string,
+    @UserGoogleId() userGoogleId: string,
+  ) {
+    return this.topicsService.copyTopicToUser(+id, userGoogleId);
+  }
+
+  @Delete('copy/:id')
+  removeTopicFromUser(
+    @Param('id') id: string,
+    @UserGoogleId() userGoogleId: string,
+  ) {
+    return this.topicsService.removeTopicFromUser(+id, userGoogleId);
+  }
 }

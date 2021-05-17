@@ -1,6 +1,8 @@
 import {
   Column,
   Entity,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -25,6 +27,8 @@ export class Topic {
 
   @ManyToOne(() => User, (user) => user.topics, {
     cascade: true,
+    eager: true,
+    onDelete: 'CASCADE',
   })
   user: User;
 
@@ -33,6 +37,12 @@ export class Topic {
     eager: true,
   })
   items: TopicItem[];
+
+  @ManyToMany(() => User, {
+    eager: true,
+  })
+  @JoinTable()
+  copied: User[];
 
   @Column({ type: 'timestamptz' })
   updatedDate: Date;
