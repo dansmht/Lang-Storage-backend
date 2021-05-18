@@ -2,6 +2,7 @@ import {
   IsArray,
   IsBoolean,
   IsNumber,
+  IsOptional,
   IsString,
   MinLength,
   ValidateNested,
@@ -20,6 +21,14 @@ export class TopicDto {
 
   @IsNumber()
   readonly position: number;
+
+  @IsOptional()
+  @IsBoolean()
+  readonly isCopied: boolean;
+
+  @IsOptional()
+  @IsNumber()
+  readonly originalTopicId: number;
 
   @IsArray()
   @ValidateNested({ each: true })

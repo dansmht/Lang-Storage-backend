@@ -11,13 +11,28 @@ export class ReformatterService {
   }
 
   topicForResponse(topic: Topic): TopicResponse {
-    const { position, isPrivate, name, user, id, items, updatedDate } = topic;
+    const {
+      position,
+      isPrivate,
+      name,
+      user,
+      id,
+      items,
+      updatedDate,
+      copied,
+      isCopied,
+      copiedTimes,
+      originalTopicId,
+    } = topic;
 
     return {
       id,
       name,
       isPrivate,
       position,
+      isCopied,
+      copiedTimes,
+      originalTopicId,
       updatedDate,
       user: {
         name: user.displayName,
@@ -33,16 +48,23 @@ export class ReformatterService {
           examples: topicItem.examples.map((example) => example.text),
         }))
         .sort((a, b) => a.position - b.position),
+      copied: copied.map((user) => user.googleId),
     };
   }
 
-  topicToDto(topic: Topic, position: number): TopicDto {
+  topicToCopiedDto(
+    topic: Topic,
+    originalTopicId: number,
+    position: number,
+  ): TopicDto {
     const { name, isPrivate, items } = topic;
 
     return {
       name,
       isPrivate,
       position,
+      isCopied: true,
+      originalTopicId,
       topicItems: items.map((topicItem) => ({
         position: topicItem.position,
         nativeLocale: topicItem.nativeLocale.name,

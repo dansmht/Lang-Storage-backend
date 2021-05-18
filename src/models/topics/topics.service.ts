@@ -63,9 +63,15 @@ export class TopicsService {
     userGoogleId: string,
     topicDto: TopicDto,
   ): Promise<TopicResponse> {
-    const { name, isPrivate, topicItems, position } = topicDto;
+    const { name, isPrivate, topicItems, position, originalTopicId } = topicDto;
 
-    const topic = this.topicsRepository.create({ name, isPrivate, position });
+    const topic = this.topicsRepository.create({
+      name,
+      isPrivate,
+      position,
+      originalTopicId,
+      copied: [],
+    });
 
     topic.updatedDate = new Date();
     topic.user = await this.usersService.findByGoogleId(userGoogleId);
@@ -103,6 +109,16 @@ export class TopicsService {
   async remove(id: number) {
     const topic = await this.topicsRepository.findOne(id);
 
+    if (topic.originalTopicId) {
+      const originalTopic = await this.topicsRepository.findOne(
+        topic.originalTopicId,
+      );
+
+      this.filterTopicCopiedUsers(originalTopic, topic.user.id);
+
+      await this.topicsRepository.save(originalTopic);
+    }
+
     return this.topicsRepository.remove(topic);
   }
 
@@ -121,22 +137,37 @@ export class TopicsService {
       throw new BadRequestException('You already copied this topic');
     }
 
-    const copiedTopicDto = this.reformatterService.topicToDto(topic, position);
+    const copiedTopicDto = this.reformatterService.topicToCopiedDto(
+      topic,
+      id,
+      position,
+    );
     await this.create(user.googleId, copiedTopicDto);
 
+    topic.copiedTimes++;
     topic.copied.push(user);
 
     return this.topicsRepository.save(topic);
   }
 
   async removeTopicFromUser(id: number, userGoogleId: string) {
-    const topic = await this.topicsRepository.findOne(id);
+    const originalTopic = await this.topicsRepository.findOne(id);
     const user = await this.usersService.findByGoogleId(userGoogleId);
 
-    topic.copied = topic.copied.filter((userWhoCopied) => {
-      return userWhoCopied.id !== user.id;
+    const certainTopic = await this.topicsRepository.findOne({
+      where: [{ originalTopicId: originalTopic.id, user: { id: user.id } }],
     });
 
-    return this.topicsRepository.save(topic);
+    this.filterTopicCopiedUsers(originalTopic, user.id);
+
+    await this.topicsRepository.save(originalTopic);
+
+    return this.topicsRepository.remove(certainTopic);
+  }
+
+  filterTopicCopiedUsers(topic: Topic, userId): void {
+    topic.copied = topic.copied.filter((user) => {
+      return user.id !== userId;
+    });
   }
 }

@@ -19,11 +19,20 @@ export class Topic {
   @Column()
   name: string;
 
-  @Column('boolean')
+  @Column()
   isPrivate: boolean;
 
   @Column('float')
   position: number;
+
+  @Column({ default: false })
+  isCopied: boolean;
+
+  @Column({ default: 0 })
+  copiedTimes: number;
+
+  @Column({ nullable: true })
+  originalTopicId: number;
 
   @ManyToOne(() => User, (user) => user.topics, {
     cascade: true,
