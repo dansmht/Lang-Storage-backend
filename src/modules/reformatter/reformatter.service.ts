@@ -55,7 +55,7 @@ export class ReformatterService {
   topicToCopiedDto(
     topic: Topic,
     originalTopicId: number,
-    position: number,
+    position: string,
   ): TopicDto {
     const { name, isPrivate, items } = topic;
 

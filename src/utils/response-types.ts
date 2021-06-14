@@ -2,7 +2,7 @@ export type TopicResponse = {
   id: number;
   name: string;
   isPrivate: boolean;
-  position: number; // it could be changed to string
+  position: string;
   isCopied: boolean;
   copiedTimes: number;
   originalTopicId: number | null;

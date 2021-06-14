@@ -22,8 +22,8 @@ export class Topic {
   @Column()
   isPrivate: boolean;
 
-  @Column('float')
-  position: number;
+  @Column()
+  position: string;
 
   @Column({ default: false })
   isCopied: boolean;

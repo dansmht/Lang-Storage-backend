@@ -19,8 +19,8 @@ export class TopicDto {
   @MinLength(1)
   readonly name: string;
 
-  @IsNumber()
-  readonly position: number;
+  @IsString()
+  readonly position: string;
 
   @IsOptional()
   @IsBoolean()

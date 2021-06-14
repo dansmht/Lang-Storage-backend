@@ -75,7 +75,7 @@ export class TopicsController {
   copyTopicToUser(
     @Param('id') id: string,
     @UserGoogleId() userGoogleId: string,
-    @Body('position') position: number,
+    @Body('position') position: string,
   ) {
     return this.topicsService.copyTopicToUser(+id, userGoogleId, position);
   }

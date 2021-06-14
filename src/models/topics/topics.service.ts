@@ -122,7 +122,7 @@ export class TopicsService {
     return this.topicsRepository.remove(topic);
   }
 
-  async copyTopicToUser(id: number, userGoogleId: string, position: number) {
+  async copyTopicToUser(id: number, userGoogleId: string, position: string) {
     const topic = await this.topicsRepository.findOne(id);
     const user = await this.usersService.findByGoogleId(userGoogleId);
 
