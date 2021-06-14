@@ -1,5 +1,11 @@
-import { Redirect } from '@nestjs/common';
-import { Controller, Get, Req, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Req,
+  Post,
+  Redirect,
+  UseGuards,
+} from '@nestjs/common';
 import { Request } from 'express';
 
 import { AuthenticatedGuard, GoogleAuthGuard } from './guards';
@@ -25,7 +31,7 @@ export class AuthController {
     return req.user;
   }
 
-  @Get('logout')
+  @Post('logout')
   @UseGuards(AuthenticatedGuard)
   logout(@Req() req: Request) {
     req.logOut();
