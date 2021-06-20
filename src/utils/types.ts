@@ -10,3 +10,9 @@ export type UserDetails = {
 };
 
 export type Done = (err: Error, user: User) => void;
+
+export type QueryType = {
+  page: string;
+  take: string;
+  term: string;
+};

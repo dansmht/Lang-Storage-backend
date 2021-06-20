@@ -1,4 +1,9 @@
-export type TopicResponse = {
+export type TopicsResponse = {
+  topics: TopicForResponse[];
+  total: number;
+};
+
+export type TopicForResponse = {
   id: number;
   name: string;
   isPrivate: boolean;

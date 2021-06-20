@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 
 import { Topic } from '../../models/topics/entities/topic.entity';
-import { TopicResponse } from '../../utils/response-types';
+import { TopicForResponse } from '../../utils/response-types';
 import { TopicDto } from '../../models/topics/dto/topic.dto';
 
 @Injectable()
 export class ReformatterService {
-  topicsForResponse(topics: Topic[]): TopicResponse[] {
+  topicsForResponse(topics: Topic[]): TopicForResponse[] {
     return topics.map(this.topicForResponse);
   }
 
-  topicForResponse(topic: Topic): TopicResponse {
+  topicForResponse(topic: Topic): TopicForResponse {
     const {
       position,
       isPrivate,

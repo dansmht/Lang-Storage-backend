@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 
 import { AuthenticatedGuard } from '../../auth/guards';
@@ -14,7 +15,8 @@ import { UserGoogleId } from '../../utils/decorators/user-google-id.decorator';
 import { TopicsService } from './topics.service';
 import { TopicDto } from './dto/topic.dto';
 import { UpdatePositionDto } from './dto/update-position.dto';
-import { TopicResponse } from '../../utils/response-types';
+import { TopicForResponse, TopicsResponse } from '../../utils/response-types';
+import { QueryType } from '../../utils/types';
 
 @Controller('topics')
 @UseGuards(AuthenticatedGuard)
@@ -25,27 +27,29 @@ export class TopicsController {
   async create(
     @UserGoogleId() userGoogleId: string,
     @Body() topicDto: TopicDto,
-  ): Promise<TopicResponse> {
+  ): Promise<TopicForResponse> {
     return this.topicsService.create(userGoogleId, topicDto);
   }
 
   @Get()
-  async findAll(): Promise<TopicResponse[]> {
+  async findAll(): Promise<TopicForResponse[]> {
     return this.topicsService.findAll();
   }
 
   @Get('my')
   async findCurrentUserTopics(
     @UserGoogleId() userGoogleId: string,
-  ): Promise<TopicResponse[]> {
-    return this.topicsService.findCurrentUserTopics(userGoogleId);
+    @Query() query: QueryType,
+  ): Promise<TopicsResponse> {
+    return this.topicsService.findCurrentUserTopics(userGoogleId, query);
   }
 
   @Get('other')
   async findExceptCurrentUserTopics(
     @UserGoogleId() userGoogleId: string,
-  ): Promise<TopicResponse[]> {
-    return this.topicsService.findExceptCurrentUserTopics(userGoogleId);
+    @Query() query: QueryType,
+  ): Promise<TopicsResponse> {
+    return this.topicsService.findExceptCurrentUserTopics(userGoogleId, query);
   }
 
   @Get(':id')

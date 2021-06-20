@@ -8,7 +8,8 @@ import { ReformatterService } from '../../modules/reformatter/reformatter.servic
 import { TopicDto } from './dto/topic.dto';
 import { Topic } from './entities/topic.entity';
 import { UpdatePositionDto } from './dto/update-position.dto';
-import { TopicResponse } from '../../utils/response-types';
+import { TopicForResponse, TopicsResponse } from '../../utils/response-types';
+import { QueryType } from '../../utils/types';
 
 @Injectable()
 export class TopicsService {
@@ -19,7 +20,7 @@ export class TopicsService {
     private reformatterService: ReformatterService,
   ) {}
 
-  async findAll(): Promise<TopicResponse[]> {
+  async findAll(): Promise<TopicForResponse[]> {
     const topics = await this.topicsRepository.find({
       order: {
         updatedDate: 'DESC',
@@ -29,30 +30,44 @@ export class TopicsService {
     return this.reformatterService.topicsForResponse(topics);
   }
 
-  async findCurrentUserTopics(userGoogleId: string): Promise<TopicResponse[]> {
+  async findCurrentUserTopics(
+    userGoogleId: string,
+    query: QueryType,
+  ): Promise<TopicsResponse> {
     const user = await this.usersService.findByGoogleId(userGoogleId);
-    const topics = await this.topicsRepository.find({
+    const [topics, total] = await this.topicsRepository.findAndCount({
       where: [{ user: { id: user.id } }],
       order: {
         position: 'ASC',
       },
+      take: Number(query.take),
+      skip: (Number(query.page) - 1) * Number(query.take),
     });
 
-    return this.reformatterService.topicsForResponse(topics);
+    return {
+      topics: this.reformatterService.topicsForResponse(topics),
+      total,
+    };
   }
 
   async findExceptCurrentUserTopics(
     userGoogleId: string,
-  ): Promise<TopicResponse[]> {
+    query: QueryType,
+  ): Promise<TopicsResponse> {
     const user = await this.usersService.findByGoogleId(userGoogleId);
-    const topics = await this.topicsRepository.find({
+    const [topics, total] = await this.topicsRepository.findAndCount({
       where: [{ user: { id: Not(user.id) }, isPrivate: false }],
       order: {
         updatedDate: 'DESC',
       },
+      take: Number(query.take),
+      skip: (Number(query.page) - 1) * Number(query.take),
     });
 
-    return this.reformatterService.topicsForResponse(topics);
+    return {
+      topics: this.reformatterService.topicsForResponse(topics),
+      total,
+    };
   }
 
   findOne(id: number) {
@@ -62,7 +77,7 @@ export class TopicsService {
   async create(
     userGoogleId: string,
     topicDto: TopicDto,
-  ): Promise<TopicResponse> {
+  ): Promise<TopicForResponse> {
     const { name, isPrivate, topicItems, position, originalTopicId } = topicDto;
 
     const topic = this.topicsRepository.create({
